@@ -49,7 +49,7 @@ def ShelfDelete(request, lab_pk, pk, row, col, org_pk):
 class ShelfForm(forms.ModelForm, GTForm):
     col = forms.IntegerField(widget=forms.HiddenInput)
     row = forms.IntegerField(widget=forms.HiddenInput)
-
+    infinity_quantity = forms.BooleanField(widget=genwidgets.CheckboxInput)
     def __init__(self, *args, **kwargs):
         org_pk = kwargs.pop('org_pk')
         super().__init__(*args, **kwargs)
@@ -62,7 +62,7 @@ class ShelfForm(forms.ModelForm, GTForm):
 
     class Meta:
         model = Shelf
-        fields = ['name', 'type', 'furniture', 'color','discard','quantity','measurement_unit','description',
+        fields = ['name', 'type', 'furniture', 'color','discard','infinity_quantity','quantity','measurement_unit','description',
                   'limit_only_objects', 'available_objects_when_limit']
         widgets = {
             'name': genwidgets.TextInput,
@@ -110,9 +110,10 @@ class ShelfUpdateForm(forms.ModelForm, GTForm):
                 'data-dropdownparent': "#createshelfmodal"
             }))
 
+
     class Meta:
         model = Shelf
-        fields = ['name', 'type', 'furniture', 'color','discard','quantity','measurement_unit','description',
+        fields = ['name', 'type', 'furniture', 'color','discard','infinity_quantity','quantity','measurement_unit','description',
                   'limit_only_objects', 'available_objects_when_limit']
         widgets = {
             'name': genwidgets.TextInput,
@@ -120,6 +121,7 @@ class ShelfUpdateForm(forms.ModelForm, GTForm):
             'furniture': forms.HiddenInput(),
             'color':  genwidgets.ColorInput,
             'discard': genwidgets.CheckboxInput,
+            'infinity_quantity': genwidgets.CheckboxInput,
             'quantity': genwidgets.TextInput,
             'measurement_unit': genwidgets.Select,
             'description': wysiwyg.TextareaWysiwyg,
@@ -155,7 +157,7 @@ class ShelfUpdateForm(forms.ModelForm, GTForm):
             else:
                 self.add_error('quantity', _('The quantity is less than the amount to the sum the objects'))
 
-        if amount or quantity==0:
+        if amount or quantity==-1:
             return quantity
         else:
             self.add_error('quantity', _('The quantity is less than the amount to the sum the objects'))

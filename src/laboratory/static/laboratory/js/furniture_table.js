@@ -67,6 +67,7 @@ function refresh_description(){
     setTimeout(function () {
         show_refuse_elements();
         show_refuse_elements_limit_only_objects();
+        hide_quantity();
         gt_find_initialize($("#shelfmodalbody"));
     }, 1000);
 
@@ -79,6 +80,7 @@ function processResponse(data) {
 	activemodal = $("#createshelfmodal").modal('show');
 	show_refuse_elements();
 	show_refuse_elements_limit_only_objects();
+	hide_quantity();
 
 }
 
@@ -145,6 +147,15 @@ function show_refuse_elements_limit_only_objects(){
         $('#id_shelf--available_objects_when_limit').parent().parent().hide();
 
       }
+}
+function hide_quantity(){
+    if($("#id_shelf--infinity_quantity").is(':checked')){
+        $('#id_shelf--quantity').parent().parent().hide();
+        $('#id_shelf--quantity').val(-1);
+    }else{
+        $('#id_shelf--quantity').parent().parent().show();
+
+    }
 }
 
 function removeShelf(){
@@ -235,6 +246,9 @@ $(document).on('ifChanged','#id_shelf--discard', function(event){
 
 $(document).on('ifChanged','#id_shelf--limit_only_objects', function(event){
     show_refuse_elements_limit_only_objects('#id_shelf--limit_only_objects');
+});
+$(document).on('ifChanged','#id_shelf--infinity_quantity', function(event){
+    hide_quantity();
 });
 
 $(document).on('click','#cancel_modal', function(event){
